@@ -1,0 +1,42 @@
+.contact-card {
+  width: 600px;
+  height: 300px;
+  margin: auto;
+}
+
+//.header-image {
+//  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+//  background-size: cover;
+//}
+
+.coordonnees-card {
+  background-color: #f0f4f9;
+  width: 400px;
+  margin-top: 70px;
+}
+
+.title-card {
+  font-size: 2rem;
+}
+
+.edit-button {
+  background-color: #0078d4 !important;
+  color: white;
+  border-radius: 20px;
+}
+
+.button-card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-container {
+  display: flex;
+  align-items: center;
+  margin-right: 125px;
+}
+
+.coordonnees-text {
+  display: flex;
+  align-items: center;
+}

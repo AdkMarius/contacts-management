@@ -4,6 +4,8 @@ import {tap} from "rxjs";
 import {Contact} from "../../models/contact.model";
 import {MatDialog} from "@angular/material/dialog";
 import {AddContactComponent} from "../add-contact/add-contact.component";
+import {Router} from "@angular/router";
+import {FormBuilder} from "@angular/forms";
 
 @Component({
   selector: 'app-list-contacts',
@@ -12,10 +14,11 @@ import {AddContactComponent} from "../add-contact/add-contact.component";
 })
 export class ListContactsComponent implements OnInit{
   contactList : Array<Contact> = new Array<Contact>();
-  displayedColumns: string[] = ["number", 'firstName', 'lastName', 'phoneNumber', "details"];
+  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', "details"];
 
   constructor(private contactService: ContactService,
-              private dialog: MatDialog) {}
+              private dialog: MatDialog,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.contactService.getContacts();
@@ -26,8 +29,8 @@ export class ListContactsComponent implements OnInit{
     ).subscribe();
   }
 
-  onViewDetails(contact: Contact) {
-
+  onViewDetails(id: number) {
+    this.router.navigateByUrl(`/contacts/${id}`).then();
   }
 
   onEdit(contact: Contact) {

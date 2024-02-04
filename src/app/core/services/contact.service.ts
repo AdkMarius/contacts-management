@@ -78,4 +78,10 @@ export class ContactService {
     const updatedContacts = contacts.map(contact => contact.id == data.id ? { ...data } : contact);
     this._contacts$.next(updatedContacts);
   }
+
+  getSingleContact(id: number): Observable<Contact> {
+    return this.contacts$.pipe(
+      map(contacts => contacts.filter(contact => contact.id === id)[0])
+    );
+  }
 }

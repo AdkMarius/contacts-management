@@ -4,8 +4,8 @@ import {ListContactsComponent} from "./components/list-contacts/list-contacts.co
 import {ContactComponent} from "./components/contact/contact.component";
 
 const routes: Routes = [
-  { path: '', component: ListContactsComponent},
-  { path: ':id', component: ContactComponent}
+  { path: '', component: ListContactsComponent },
+  { path: ':id', component: ContactComponent }
 ];
 
 @NgModule({

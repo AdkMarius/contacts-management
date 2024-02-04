@@ -1,0 +1,40 @@
+<div class="button-card mb-5">
+  <div class="return-container">
+    <button mat-icon-button (click)="onGoBack()">
+      <mat-icon>keyboard_backspace</mat-icon>
+    </button>
+  </div>
+  <div class="edit-container">
+    <button mat-raised-button class="edit-button" (click)="onEditContact()">Modifier</button>
+    <button mat-icon-button (click)="onDeleteContact()">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-card class="contact-card" *ngIf="contact$ | async as contact">
+  <mat-card-header>
+    <mat-card-title class="ms-2 title-card">{{ contact.firstName }} {{ contact.lastName }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card class="coordonnees-card ms-4">
+    <mat-card-header>
+      <mat-card-title>Coordonnées</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="coordonnees-text">
+        <mat-icon class="me-2"> email</mat-icon>
+        Email : {{ contact.email }}
+      </p>
+      <p class="coordonnees-text">
+        <mat-icon class="me-2">call</mat-icon>
+        Numéro de téléphone : {{ contact.phoneNumber }}
+      </p>
+      <p class="coordonnees-text">
+        <mat-icon class="me-2">date_range</mat-icon>
+        Date de naissance : {{ contact.birthDate }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+</mat-card>

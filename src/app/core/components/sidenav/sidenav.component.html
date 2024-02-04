@@ -12,11 +12,17 @@
     </div>
 
 
-    <div class="col-10">
-      <mat-form-field appearance="fill">
+    <div class="col-10 form">
+      <mat-form-field appearance="fill" class="me-3 search">
         <mat-label>Rechercher</mat-label>
-        <input matInput type="type">
+        <input matInput type="type" [formControl]="searchCtrl">
         <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="search-type">
+        <mat-select [formControl]="searchTypeCtrl">
+          <mat-option *ngFor="let option of searchTypeOptions" [value]="option.value">{{ option.label }}</mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
   </mat-toolbar>
