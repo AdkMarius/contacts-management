@@ -12,6 +12,7 @@ export class SidenavComponent {
 
   constructor(private router: Router,
               private dialog: MatDialog) {}
+
   onListContact() {
     this.router.navigateByUrl('/contacts');
   }

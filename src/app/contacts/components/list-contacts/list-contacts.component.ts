@@ -1,19 +1,21 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ContactService} from "../../../core/services/contact.service";
 import {tap} from "rxjs";
 import {Contact} from "../../models/contact.model";
+import {MatDialog} from "@angular/material/dialog";
+import {AddContactComponent} from "../add-contact/add-contact.component";
 
 @Component({
   selector: 'app-list-contacts',
   templateUrl: './list-contacts.component.html',
   styleUrls: ['./list-contacts.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListContactsComponent implements OnInit{
   contactList : Array<Contact> = new Array<Contact>();
   displayedColumns: string[] = ["number", 'firstName', 'lastName', 'phoneNumber', "details"];
 
-  constructor(private contactService: ContactService) {}
+  constructor(private contactService: ContactService,
+              private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.contactService.getContacts();
@@ -24,15 +26,19 @@ export class ListContactsComponent implements OnInit{
     ).subscribe();
   }
 
-  onViewDetails() {
+  onViewDetails(contact: Contact) {
 
   }
 
-  onEdit() {
+  onEdit(contact: Contact) {
+    const dialogRef = this.dialog.open(AddContactComponent, {data: contact});
 
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 
-  onDelete() {
-
+  onDelete(id: number) {
+    this.contactService.deleteContact(id);
   }
 }

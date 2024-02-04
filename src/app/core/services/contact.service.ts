@@ -7,21 +7,12 @@ import {Contact} from "../../contacts/models/contact.model";
   providedIn: 'root'
 })
 export class ContactService {
-  private _loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _contacts$: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  get loading$(): Observable<boolean> {
-    return this._loading$.asObservable();
-  }
-
   get contacts$(): Observable<Contact[]> {
     return this._contacts$.asObservable();
-  }
-
-  setLoadingStatus(loading: boolean) {
-    this._loading$.next(loading);
   }
 
   getContacts() {
@@ -30,50 +21,61 @@ export class ContactService {
     ).subscribe();
   }
 
-  private addContact(data: Contact) {
+  addContact(data: Contact) {
     const currentContacts = this._contacts$.value;
     const updatedContacts = [...currentContacts, data];
     this._contacts$.next(updatedContacts);
   }
 
-  createNewContact(formValue: {firstName: string, lastName: string, email: string, phoneNumber: string, birthDate: string}): boolean {
-    this.contacts$.pipe(
+  createNewContact(formValue: {firstName: string, lastName: string, email: string, phoneNumber: string, birthDate: string}): Observable<Contact> {
+    return this.contacts$.pipe(
       take(1),
       map(contacts => [...contacts].sort((a, b) => a.id - b.id)),
       map(sortedContacts => sortedContacts[sortedContacts.length - 1]),
       map(previousContact => ({
-        ...formValue,
-        id: +previousContact.id + 1
+        id: +previousContact.id + 1,
+        ...formValue
       })),
-      delay(1000),
       switchMap(contact =>
         this.http.post<Contact>('http://localhost:3000/contacts', contact)
       )
-    ).subscribe({
-      next: response =>{
-        this.addContact(response);
-        this.setLoadingStatus(false);
-
-        return true;
-      },
-      error: err => {
-
-      }
-    });
-
-    return false;
+    );
   }
 
   deleteContact(id: number) {
-    this.setLoadingStatus(true);
     this.http.delete(`http://localhost:3000/contacts/${id}`).pipe(
       switchMap(() => this.contacts$),
       take(1),
-      map(contacts => contacts.filter(contact => contact.id === id)),
+      map(contacts => contacts.filter(contact => contact.id !== id)),
       tap(contacts => {
+        console.log(contacts);
         this._contacts$.next(contacts);
-        this.setLoadingStatus(false);
       })
     ).subscribe();
+  }
+
+  editContact(id: number, formValue: {firstName: string, lastName: string, email: string, phoneNumber: string, birthDate: string}): Observable<Contact> {
+    return this.contacts$.pipe(
+      take(1),
+      map(contacts => contacts
+        .map(contact => contact.id === id ? {
+              id: id,
+              ...formValue
+            } : contact
+        )
+      ),
+      switchMap(contacts =>
+        this.http.patch<Contact>(
+          `http://localhost:3000/contacts/${id}`,
+          contacts.find(contact => contact.id === id)
+        )
+      )
+    );
+  }
+
+  editData(data: Contact) {
+    const contacts = this._contacts$.value;
+    const updatedContacts = contacts.map(contact => contact.id == data.id ? { ...data } : contact);
+    this._contacts$.next(updatedContacts);
   }
 }
