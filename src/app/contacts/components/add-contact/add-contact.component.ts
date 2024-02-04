@@ -11,6 +11,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 })
 export class AddContactComponent implements OnInit {
   loading: boolean = false;
+  isCreate!: boolean;
   firstNameCtrl!: FormControl;
   lastNameCtrl!: FormControl;
   emailCtrl!: FormControl;
@@ -32,38 +33,33 @@ export class AddContactComponent implements OnInit {
       validators: [
         Validators.required,
         Validators.minLength(3)
-      ],
-      updateOn: "blur"
+      ]
     });
 
     this.lastNameCtrl = this.formBuilder.control('', {
       validators: [
         Validators.required,
         Validators.minLength(3)
-      ],
-      updateOn: "blur"
+      ]
     });
 
     this.emailCtrl = this.formBuilder.control('', {
       validators: [
         Validators.required,
         Validators.email
-      ],
-      updateOn: "blur"
+      ]
     });
 
     this.birthDateCtrl = this.formBuilder.control('', {
       validators: [
         Validators.required,
-      ],
-      updateOn: "blur"
+      ]
     });
 
     this.phoneNumberCtrl = this.formBuilder.control('', {
       validators: [
         Validators.required,
-      ],
-      updateOn: "blur"
+      ]
     });
   }
 
@@ -74,10 +70,7 @@ export class AddContactComponent implements OnInit {
       email : this.emailCtrl,
       birthDate: this.birthDateCtrl,
       phoneNumber: this.phoneNumberCtrl
-    },
-      {
-        updateOn: "blur"
-      });
+    })
   }
 
   getErrorFormControlMessage(ctrl: AbstractControl) {
@@ -86,30 +79,27 @@ export class AddContactComponent implements OnInit {
     else if (ctrl.hasError('email'))
       return "Votre adresse email n'est pas valide";
     else if (ctrl.hasError('minlength'))
-      return "Veuillez respecter le format (nombre minimum)";
+      return "Le numero de telephone contient moins de chiffres";
     else if (ctrl.hasError('maxlength'))
-      return "Veuillez respecter le format (nombre maximum)";
+      return "Le numero de telephone contient trop de chiffres";
 
-    return "Ce champ contient une erreur";
+    return "";
   }
 
   onCreateNewContact() {
     this.loading = true;
-    this.contactService.createNewContact(this.mainForm.value).pipe(
-      tap(create => {
-        this.loading = false;
-        if (create) {
-          this.resetForm();
-        } else {
-          console.log('Error while saving user information');
-        }
-      })
-    ).subscribe({
-      next : response => {
-        this.dialogRef.close(response);
-      }
-    });
+    try {
+      this.isCreate = this.contactService.createNewContact(this.mainForm.value);
+      this.loading = false;
 
+      if (this.isCreate) {
+        this.resetForm();
+      }
+      else
+        console.log('Error while saving user information');
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private resetForm(): void {

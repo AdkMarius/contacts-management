@@ -26,15 +26,15 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onViewDetails()">
           <mat-icon>visibility</mat-icon>
           <span>Voir détails</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onEdit()">
           <mat-icon>edit</mat-icon>
           <span>Modifier</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onDelete()">
           <mat-icon>delete</mat-icon>
           <span>Supprimer</span>
         </button>
