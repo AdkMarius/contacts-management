@@ -1,0 +1,9 @@
+.iti__flag {
+  background-image: url("https://raw.githubusercontent.com/jackocnr/intl-tel-input/master/build/img/flags.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {
+    background-image: url("https://raw.githubusercontent.com/jackocnr/intl-tel-input/master/build/img/flags@2x.png");
+  }
+}

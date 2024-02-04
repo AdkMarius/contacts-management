@@ -14,7 +14,7 @@ export class ListContactsComponent implements OnInit{
   contacts$!: Observable<Contact[]>;
   contactList : Array<Contact> = new Array<Contact>();
   isLoading = false;
-  displayedColumns: string[] = ['firstName', 'lastName', 'phoneNumber', "details"];
+  displayedColumns: string[] = ["number", 'firstName', 'lastName', 'phoneNumber', "details"];
 
   constructor(private contactService: ContactService) {}
 
