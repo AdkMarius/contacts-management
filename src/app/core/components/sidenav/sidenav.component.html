@@ -1,0 +1,54 @@
+<div>
+  <mat-toolbar class="" style="height: 100px">
+    <div class="d-flex align-items-center col-2">
+      <button mat-icon-button class="example-icon" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>
+            <img width="38" height="38" src="/assets/images/contacts.png" alt="">
+          </span>
+      <span class="header-title">Contacts</span>
+      <span class="example-spacer"></span>
+    </div>
+
+
+    <div class="col-10">
+      <mat-form-field appearance="fill">
+        <mat-label>Rechercher</mat-label>
+        <input matInput type="type">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-toolbar>
+</div>
+
+<mat-drawer-container class="" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" opened style="background-color: #f2f2f2">
+    <div class="h-100" >
+      <div class="mb-4">
+        <button mat-raised-button class="add-button" (click)="onAddContact()">
+          <mat-icon>add</mat-icon>
+          Ajouter un contact
+        </button>
+      </div>
+
+      <div>
+        <button mat-raised-button color="primary" class="list-button" (click)="onListContact()">
+          <mat-icon>account_box</mat-icon>
+          Contacts
+        </button>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <div class="w-100" style=" height: calc(100vh - 100px);">
+      <div class="mx-4 my-4">
+        <ng-container>
+          <router-outlet></router-outlet>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+</mat-drawer-container>

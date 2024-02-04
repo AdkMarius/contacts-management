@@ -1,0 +1,51 @@
+table {
+  width: 100%;
+}
+
+.add-button {
+  width: 200px;
+  height: 50px;
+  border-radius: 20px;
+  background-color: #0078d4 !important;
+  color: white !important;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  margin-left: 5px;
+}
+
+.list-button {
+  width: 210px;
+  height: 50px;
+  border-radius: 20px;
+  background-color: #0078d4 !important;
+  color: white !important;
+  font-size: 1.3rem;
+}
+
+mat-form-field {
+  width: 60%;
+}
+
+
+.example-container {
+  width: 500px;
+  height: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+}
