@@ -1,9 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AbstractControl, Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ContactService} from "../../../core/services/contact.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Contact} from "../../models/contact.model";
 import {tap} from "rxjs";
+import {DatePipe} from "@angular/common";
+import { SearchCountryField, CountryISO, PhoneNumberFormat } from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-add-contact',
@@ -12,7 +14,6 @@ import {tap} from "rxjs";
 })
 export class AddContactComponent implements OnInit {
   loading: boolean = false;
-  isOkay!: boolean;
   firstNameCtrl!: FormControl;
   lastNameCtrl!: FormControl;
   emailCtrl!: FormControl;
@@ -21,14 +22,20 @@ export class AddContactComponent implements OnInit {
   mainForm!: FormGroup;
   isNew!: boolean;
 
+  separateDialCode = false;
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+  preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+
   constructor(private formBuilder: FormBuilder,
               private contactService: ContactService,
-              @Inject(MAT_DIALOG_DATA) public data: Contact) {}
+              @Inject(MAT_DIALOG_DATA) public data: Contact,
+              private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     if (!this.data) {
       this.initFormsControls();
-      this.initMainForm();
       this.isNew = true;
     } else {
       this.editContact();
@@ -37,41 +44,56 @@ export class AddContactComponent implements OnInit {
   }
 
   private initFormsControls() {
-    this.firstNameCtrl = this.formBuilder.control('', {
+    this.validateFormControls(null);
+    this.initMainForm();
+  }
+
+  editContact() {
+    this.validateFormControls(this.data);
+    this.initMainForm();
+  }
+
+  private validateFormControls(data: Contact | null) {
+    this.firstNameCtrl = this.formBuilder.control(data?.firstName, {
       validators: [
         Validators.required,
         Validators.minLength(3)
       ]
     });
 
-    this.lastNameCtrl = this.formBuilder.control('', {
+    this.lastNameCtrl = this.formBuilder.control(data?.lastName, {
       validators: [
         Validators.required,
         Validators.minLength(3)
       ]
     });
 
-    this.emailCtrl = this.formBuilder.control('', {
+    this.emailCtrl = this.formBuilder.control(data?.email, {
       validators: [
         Validators.required,
         Validators.email
       ]
     });
 
-    this.birthDateCtrl = this.formBuilder.control('', {
+    this.birthDateCtrl = this.formBuilder.control(data?.birthDate, {
       validators: [
         Validators.required,
       ]
     });
 
-    this.phoneNumberCtrl = this.formBuilder.control('', {
+    this.phoneNumberCtrl = this.formBuilder.control(data?.phoneNumber, {
       validators: [
         Validators.required,
       ]
     });
   }
 
+  private formatDate() {
+    this.datePipe.transform(this.birthDateCtrl.value, 'dd/MM/yyyy');
+  }
+
   private initMainForm() {
+    this.formatDate();
     this.mainForm = this.formBuilder.group({
       firstName : this.firstNameCtrl,
       lastName : this.lastNameCtrl,
@@ -96,45 +118,6 @@ export class AddContactComponent implements OnInit {
 
   private resetForm(): void {
     this.mainForm.reset();
-  }
-
-  editContact() {
-    this.firstNameCtrl = this.formBuilder.control(this.data.firstName, {
-      validators: [
-        Validators.required,
-        Validators.minLength(3)
-      ]
-    });
-    this.lastNameCtrl = this.formBuilder.control(this.data.lastName, {
-      validators: [
-        Validators.required,
-        Validators.minLength(3)
-      ]
-    });
-    this.emailCtrl = this.formBuilder.control(this.data.email, {
-      validators: [
-        Validators.required,
-        Validators.email
-      ]
-    });
-    this.phoneNumberCtrl = this.formBuilder.control(this.data.phoneNumber, {
-      validators: [
-        Validators.required,
-      ]
-    });
-    this.birthDateCtrl = this.formBuilder.control(this.data.birthDate, {
-      validators: [
-        Validators.required,
-      ]
-    });
-
-    this.mainForm = this.formBuilder.group({
-      firstName : this.firstNameCtrl,
-      lastName : this.lastNameCtrl,
-      email : this.emailCtrl,
-      birthDate: this.birthDateCtrl,
-      phoneNumber: this.phoneNumberCtrl
-    })
   }
 
   onValideContact() {

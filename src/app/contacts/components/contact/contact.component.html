@@ -32,7 +32,7 @@
       </p>
       <p class="coordonnees-text">
         <mat-icon class="me-2">date_range</mat-icon>
-        Date de naissance : {{ contact.birthDate }}
+        Date de naissance : {{ contact.birthDate | date: 'dd/MM/yyyy'}}
       </p>
     </mat-card-content>
   </mat-card>

@@ -4,6 +4,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddContactComponent} from "../../../contacts/components/add-contact/add-contact.component";
 import {FormBuilder, FormControl} from "@angular/forms";
 import {ContactSearchType} from "../../enums/contact-search-type.enum";
+import {ContactService} from "../../services/contact.service";
+import {map, startWith, tap} from "rxjs";
 
 @Component({
   selector: 'app-sidenav',
@@ -20,10 +22,11 @@ export class SidenavComponent implements OnInit {
 
   constructor(private router: Router,
               private dialog: MatDialog,
-              private formBuilder: FormBuilder) {}
+              private formBuilder: FormBuilder,
+              private contactService: ContactService) {}
 
   ngOnInit(): void {
-    this.initForm();
+    this.initObservables();
   }
 
   private initForm() {
@@ -32,8 +35,21 @@ export class SidenavComponent implements OnInit {
     this.searchTypeOptions = [
       { value: ContactSearchType.LASTNAME, label: "Nom"},
       { value: ContactSearchType.FIRSTNAME, label: "Prénom"},
-      { value: ContactSearchType.EMAIL, label: "Email"},
     ]
+  }
+
+  private initObservables() {
+    this.initForm();
+    this.searchCtrl.valueChanges.pipe(
+      startWith(this.searchCtrl.value),
+      map(value => value.toLowerCase()),
+      tap(value => this.contactService.setSearchQuery(value))
+    ).subscribe();
+
+    this.searchTypeCtrl.valueChanges.pipe(
+      startWith(this.searchTypeCtrl.value),
+      tap(searchType => this.contactService.setSearchType(searchType))
+    ).subscribe();
   }
 
 

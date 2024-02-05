@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ContactService} from "../../../core/services/contact.service";
-import {tap} from "rxjs";
+import {combineLatest, map, tap} from "rxjs";
 import {Contact} from "../../models/contact.model";
 import {MatDialog} from "@angular/material/dialog";
 import {AddContactComponent} from "../add-contact/add-contact.component";
 import {Router} from "@angular/router";
-import {FormBuilder} from "@angular/forms";
 
 @Component({
   selector: 'app-list-contacts',
@@ -21,11 +20,23 @@ export class ListContactsComponent implements OnInit{
               private router: Router) {}
 
   ngOnInit(): void {
+    this.initContactList();
+    this.searchContact();
+  }
+
+  private initContactList() {
     this.contactService.getContacts();
-    this.contactService.contacts$.pipe(
-      tap(contacts => {
-        this.contactList = contacts;
-      })
+  }
+
+  private searchContact() {
+    combineLatest([
+      this.contactService.searchQuery$,
+      this.contactService.searchType$,
+      this.contactService.contacts$
+    ]).pipe(
+      map(([search, searchType, contacts]) =>
+        contacts.filter(contact => contact[searchType].toLowerCase().includes(search as string))),
+      tap(contacts => this.contactList = contacts)
     ).subscribe();
   }
 
@@ -44,4 +55,6 @@ export class ListContactsComponent implements OnInit{
   onDelete(id: number) {
     this.contactService.deleteContact(id);
   }
+
+  protected readonly length = length;
 }

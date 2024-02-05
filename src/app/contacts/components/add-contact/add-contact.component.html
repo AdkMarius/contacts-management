@@ -32,14 +32,9 @@
 
       <mat-form-field class="example-form-field">
         <mat-label>Date de naissance</mat-label>
-        <input matInput [matDatepicker]="datepicker" [formControl]="birthDateCtrl">
-        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
-        <mat-datepicker #datepicker>
-          <mat-datepicker-actions>
-            <button mat-button matDatepickerCancel>Annuler</button>
-            <button mat-raised-button matDatepickerApply color="primary">Ajouter</button>
-          </mat-datepicker-actions>
-        </mat-datepicker>
+        <input matInput [matDatepicker]="picker" [formControl]="birthDateCtrl">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
         <mat-error>{{ getErrorFormControlMessage(birthDateCtrl) }}</mat-error>
       </mat-form-field>
     </div>
@@ -47,11 +42,26 @@
   </mat-card>
 
   <mat-card class="form-card">
-    <mat-form-field appearance="fill" class="phone-number">
-      <mat-label>Numéro de Téléphone</mat-label>
-      <input type="tel" matInput [formControl]="phoneNumberCtrl">
-      <mat-error>{{ getErrorFormControlMessage(phoneNumberCtrl) }}</mat-error>
-    </mat-form-field>
+    <ngx-intl-tel-input class="phone-number"
+      [cssClass]="'custom'"
+      [preferredCountries]="preferredCountries"
+      [enableAutoCountrySelect]="true"
+      [enablePlaceholder]="true"
+      [searchCountryFlag]="true"
+      [searchCountryField]="[
+          SearchCountryField.Iso2,
+          SearchCountryField.Name
+        ]"
+      [selectFirstCountry]="false"
+      [selectedCountryISO]="CountryISO.India"
+      [maxLength]="20"
+      [phoneValidation]="true"
+      [separateDialCode]="separateDialCode"
+      [numberFormat]="PhoneNumberFormat.National"
+      [formControl]="phoneNumberCtrl"
+    >
+    </ngx-intl-tel-input>
+    <mat-error *ngIf="phoneNumberCtrl.invalid && phoneNumberCtrl.value">Veuillez respecter le format !</mat-error>
   </mat-card>
 
   <mat-dialog-actions align="end">

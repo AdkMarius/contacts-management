@@ -1,18 +1,37 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, delay, map, Observable, switchMap, take, tap} from "rxjs";
+import {BehaviorSubject, map, Observable, switchMap, take, tap} from "rxjs";
 import {Contact} from "../../contacts/models/contact.model";
+import {ContactSearchType} from "../enums/contact-search-type.enum";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
   private _contacts$: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
+  private _searchQuery$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private _searchType$: BehaviorSubject<ContactSearchType> = new BehaviorSubject<ContactSearchType>(ContactSearchType.LASTNAME);
 
   constructor(private http: HttpClient) {}
 
   get contacts$(): Observable<Contact[]> {
     return this._contacts$.asObservable();
+  }
+
+  get searchQuery$(): Observable<string> {
+    return this._searchQuery$.asObservable();
+  }
+
+  setSearchQuery(query: string) {
+    this._searchQuery$.next(query);
+  }
+
+  get searchType$(): Observable<ContactSearchType> {
+    return this._searchType$.asObservable();
+  }
+
+  setSearchType(type: ContactSearchType) {
+    this._searchType$.next(type);
   }
 
   getContacts() {
@@ -27,14 +46,18 @@ export class ContactService {
     this._contacts$.next(updatedContacts);
   }
 
-  createNewContact(formValue: {firstName: string, lastName: string, email: string, phoneNumber: string, birthDate: string}): Observable<Contact> {
+  createNewContact(formValue: {firstName: string, lastName: string, email: string, phoneNumber: {internationalNumber: string}, birthDate: string}): Observable<Contact> {
     return this.contacts$.pipe(
       take(1),
       map(contacts => [...contacts].sort((a, b) => a.id - b.id)),
       map(sortedContacts => sortedContacts[sortedContacts.length - 1]),
       map(previousContact => ({
         id: +previousContact.id + 1,
-        ...formValue
+        firstName: formValue.firstName,
+        lastName: formValue.lastName,
+        email: formValue.email,
+        phoneNumber: formValue.phoneNumber.internationalNumber,
+        birthDate: formValue.birthDate
       })),
       switchMap(contact =>
         this.http.post<Contact>('http://localhost:3000/contacts', contact)
@@ -54,13 +77,17 @@ export class ContactService {
     ).subscribe();
   }
 
-  editContact(id: number, formValue: {firstName: string, lastName: string, email: string, phoneNumber: string, birthDate: string}): Observable<Contact> {
+  editContact(id: number, formValue: {firstName: string, lastName: string, email: string, phoneNumber: {internationalNumber: string}, birthDate: string}): Observable<Contact> {
     return this.contacts$.pipe(
       take(1),
       map(contacts => contacts
         .map(contact => contact.id === id ? {
-              id: id,
-              ...formValue
+            id: id,
+            firstName: formValue.firstName,
+            lastName: formValue.lastName,
+            email: formValue.email,
+            phoneNumber: formValue.phoneNumber.internationalNumber,
+            birthDate: formValue.birthDate
             } : contact
         )
       ),
@@ -84,4 +111,8 @@ export class ContactService {
       map(contacts => contacts.filter(contact => contact.id === id)[0])
     );
   }
+
+  // searchContacts(contacts: Contact[]) {
+  //   this._contacts$.next(contacts);
+  // }
 }
