@@ -41,14 +41,6 @@
       "birthDate": "2004-01-13"
     },
     {
-      "id": 8,
-      "firstName": "Christopher",
-      "lastName": "Botsford",
-      "email": "Norbert53@gmail.com",
-      "phoneNumber": "+221 77 765 90 17",
-      "birthDate": "2010-02-03"
-    },
-    {
       "id": 9,
       "firstName": "Florence",
       "lastName": "Abbott",
@@ -335,6 +327,22 @@
       "email": "paul@esmt.sn",
       "phoneNumber": "+33 897 65 42 39",
       "birthDate": "2003-07-17T00:00:00.000Z"
+    },
+    {
+      "id": 48,
+      "firstName": "Aimee",
+      "lastName": "DOUMBIA",
+      "email": "aimee@esmt.sn",
+      "phoneNumber": "+221 78 654 56 45",
+      "birthDate": "2005-11-17T00:00:00.000Z"
+    },
+    {
+      "id": 49,
+      "firstName": "Freud",
+      "lastName": "KINMINTON",
+      "email": "freud@esmt.sn",
+      "phoneNumber": "+221 78 987 65 48",
+      "birthDate": "2001-10-18T00:00:00.000Z"
     }
   ]
 }
